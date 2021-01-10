@@ -1,4 +1,21 @@
+
+global HasSSE3
+global HasPCLMULQDQ
+
+global HasSSSE3
+global HasFMA
+global HasSSE41
+global HasSSE42
+global HasAES
+global HasAVX
+global HasRDRAND
+global HasRDSEED
+global HasSHANI
+
+global HasAVX2
+
 ; EBX
+
 global HasAVX512F
 global HasAVX512DQ
 global HasAVX512FMA
@@ -19,9 +36,162 @@ global HasAVX512POPCNT
 global HasAVX512VNNIW
 global HasAVX512FMAPS
 
+global AVX512State
+
+global LogicalProcCount
+
+global HasHTT
+
 section .text
 
+
+HasSSE3:
+	
+	mov eax, 1
+	cpuid
+	;shr ecx, 28
+	and ecx, 1
+	mov rax, rcx
+		
+	ret
+
+
+HasPCLMULQDQ:
+	mov eax, 1
+	
+	cpuid
+	shr ecx, 1
+	and ecx, 1
+	mov rax, rcx
+		
+	ret
+
+HasSSSE3:
+	
+	mov eax, 1
+	
+	cpuid
+	shr ecx, 9
+	and ecx, 1
+	mov rax, rcx
+		
+	ret
+
+
+HasFMA:
+	
+	mov eax, 1
+	
+	cpuid
+	shr ecx, 12
+	and ecx, 1
+	mov rax, rcx
+		
+	ret
+
+
+HasSSE41:
+	
+	mov eax, 1
+	
+	cpuid
+	shr ecx, 19
+	and ecx, 1
+	mov rax, rcx
+		
+	ret
+
+
+HasSSE42:
+	
+	mov eax, 1
+	
+	cpuid
+	shr ecx, 20
+	and ecx, 1
+	mov rax, rcx
+		
+	ret
+
+
+HasAES:
+	mov eax, 1
+	
+	cpuid
+	shr ecx, 25
+	and ecx, 1
+	mov rax, rcx
+		
+	ret
+
+HasAVX:
+	
+	mov eax, 1
+	
+	cpuid
+	shr ecx, 28
+	and ecx, 1
+	mov rax, rcx
+		
+	ret
+
+
+HasRDRAND:
+	
+	mov eax, 1
+	
+	cpuid
+	shr ecx, 30
+	and ecx, 1
+	mov rax, rcx
+		
+	ret
+
+
+HasRDSEED:
+	push rbx
+
+	mov eax, 7
+	xor rcx, rcx
+	
+	cpuid
+	shr ebx, 18
+	and ebx, 1
+	mov rax, rbx
+		
+	pop rbx
+	ret
+
+
+HasSHANI:
+	push rbx
+
+	mov eax, 7
+	xor rcx, rcx
+	
+	cpuid
+	shr ebx, 29
+	and ebx, 1
+	mov rax, rbx
+		
+	pop rbx
+	ret
+
+HasAVX2:
+	push rbx
+
+	mov eax, 7
+	mov ecx, 0
+	cpuid
+	shr ebx, 5
+	and ebx, 1
+	mov rax, rbx
+
+	pop rbx
+	ret
+
 ; EBX
+
 HasAVX512F:
 	push rbx
 
@@ -205,3 +375,39 @@ HasAVX512FMAPS:
 	ret
 
 
+
+AVX512State:
+	mov eax, 0Dh
+	mov ecx, 0
+	cpuid
+	shr eax, 5
+	and eax, 111b
+	
+	ret
+
+LogicalProcCount:
+	push rbx
+	xor rcx, rcx
+	mov eax, 01h
+	cpuid
+	shr ebx, 16
+	
+	and ebx, 0FFh
+	mov rax, rbx
+
+	pop rbx
+	ret
+
+
+
+HasHTT:
+	mov eax, 01h
+	cpuid
+	shr edx, 28
+	
+	and edx, 1
+	mov rax, rdx
+
+	
+	ret
+		

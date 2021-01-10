@@ -3,7 +3,22 @@
 
 extern "C"
 {
+	bool HasPCLMULQDQ();
+	bool HasAES();
+	bool HasSSE3();
+	bool HasSSSE3();
+	bool HasFMA();
+	bool HasSSE41();
+	bool HasSSE42();
+	bool HasAVX();
+	bool HasRDRAND();
+	bool HasRDSEED();
+	bool HasSHANI();
+
+	bool HasAVX2();
+
 	//ebx
+	
 	bool HasAVX512F();
 	bool HasAVX512DQ();
 	bool HasAVX512FMA();
@@ -24,7 +39,11 @@ extern "C"
 	bool HasAVX512VNNIW();
 	bool HasAVX512FMAPS();
 	
-	
+	int AVX512State();
+	int LogicalProcCount();
+
+	bool HasHTT();
+
 
 
 };
