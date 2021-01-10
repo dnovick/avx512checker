@@ -61,7 +61,7 @@ std::vector<TestInfo> avx512TestInfos{
 
 void do_and_show_test(const TestInfo& testInfo)
 {
-    std::cout << "Has " << testInfo.capability << ": " << (testInfo.testfunc() ? "TRUE\n" : "FALSE\n");
+    std::cout << "Has " << testInfo.capability <<  ": "  << (testInfo.testfunc() ? "TRUE\n" : "FALSE\n");
 
 }
 

@@ -1,7 +1,7 @@
 # avx512checker
 A utility to check which AVX 512 capabilities your CPU supports. It also outputs info about some general CPU capabilities.
 
-Currently, this is a Windows console application. At some point, I might add Linux support.
+This started as a Windows console application. There is a CMake based Linux build in the Linux subdirectory. Right now, it builds but crashes when run.
 
 I wrote this after watching a set of creel videos about AVX512: https://www.youtube.com/watch?v=D-mM6X5xnTY.
 
