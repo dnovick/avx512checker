@@ -1,3 +1,5 @@
+bits 64
+cpu x64
 
 global HasSSE3
 global HasPCLMULQDQ
@@ -401,6 +403,7 @@ LogicalProcCount:
 
 
 HasHTT:
+
 	mov eax, 01h
 	cpuid
 	shr edx, 28
@@ -408,6 +411,6 @@ HasHTT:
 	and edx, 1
 	mov rax, rdx
 
-	
+
 	ret
 		

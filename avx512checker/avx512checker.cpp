@@ -21,7 +21,7 @@ std::vector<TestInfo> testInfos{
     {"RDRAND",      HasRDRAND},
     {"RDSEED",      HasRDSEED},
     {"SHA NI",      HasSHANI},
-    {"SSE3",        HasSSE3},    
+    {"SSE3",        HasSSE3},
     {"SSSE3",       HasSSSE3},
     
     {"SSE4.1",      HasSSE41},
@@ -83,7 +83,7 @@ int main()
     //std::cout << "This CPU has " << LogicalProcCount() << " logical processors.\n\n";
 
          
-    for (auto ti : testInfos)
+    for (const auto& ti : testInfos)
     {
         do_and_show_test(ti);
     }
@@ -92,9 +92,11 @@ int main()
 
     std::cout << "\n\n======AVX 512 Capabilities=====\n\n";
 
-    for (auto ti : avx512TestInfos)
+    for (const auto& ti : avx512TestInfos)
     {
         do_and_show_avx512_test(ti);
 
     }
+
+    std::cout << "\n\nTesting complete!\n\n";
 }
