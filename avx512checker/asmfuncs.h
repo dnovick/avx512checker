@@ -15,6 +15,14 @@ extern "C"
 	bool HasRDSEED();
 	bool HasSHANI();
 
+	bool HasIBRS();
+	bool HasSTIBP();
+
+
+	bool HasCETSS();
+	bool HasCETIBT();
+	
+
 	bool HasAVX2();
 
 	//ebx

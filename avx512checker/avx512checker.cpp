@@ -21,6 +21,10 @@ std::vector<TestInfo> testInfos{
     {"RDRAND",      HasRDRAND},
     {"RDSEED",      HasRDSEED},
     {"SHA NI",      HasSHANI},
+    {"IBRS",        HasIBRS},
+    {"STIPB",       HasSTIBP},
+    {"CET SS",      HasCETSS},
+    {"CET IBT",     HasCETIBT},
     {"SSE3",        HasSSE3},
     {"SSSE3",       HasSSSE3},
     

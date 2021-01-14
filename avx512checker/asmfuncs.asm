@@ -14,6 +14,12 @@ global HasRDRAND
 global HasRDSEED
 global HasSHANI
 
+global HasIBRS
+global HasSTIBP
+
+global HasCETSS
+global HasCETIBT
+
 global HasAVX2
 
 ; EBX
@@ -178,6 +184,55 @@ HasSHANI:
 		
 	pop rbx
 	ret
+
+HasIBRS:
+
+	mov eax, 7
+	xor rcx, rcx
+	
+	cpuid
+	shr edx, 26
+	and edx, 1
+	mov rax, rdx
+		
+	ret
+
+HasSTIBP:
+
+	mov eax, 7
+	xor rcx, rcx
+	
+	cpuid
+	shr edx, 27
+	and edx, 1
+	mov rax, rdx
+		
+	ret
+
+
+HasCETSS:
+	mov eax, 7
+	xor rcx, rcx
+	
+	cpuid
+	shr ecx, 7
+	and ecx, 1
+	mov rax, rcx
+		
+	ret
+
+HasCETIBT:
+	mov eax, 7
+	xor rcx, rcx
+	
+	cpuid
+	shr edx, 20
+	and edx, 1
+	mov rax, rdx
+		
+	ret
+
+
 
 HasAVX2:
 	push rbx
