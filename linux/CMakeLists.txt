@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 project(avx512checker C CXX)
 
 set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/../avx512checker)

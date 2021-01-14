@@ -50,386 +50,450 @@ global LogicalProcCount
 
 global HasHTT
 
+
 section .text
 
 
-HasSSE3:
+; DOCPUID eax_val, leaf_reg, bit_num
+; TODOD: Add support for non 0 ecx values - i.e. other leaves.
+%macro DOCPUID 4
+	push rbx		;Some CPUID calls modify rbx which must be preserved.
 	
-	mov eax, 1
+	%if %2 == 0		; Set the rcx leaf
+		xor rcx, rcx
+	%else
+		mov ecx, %2
+	%endif
+
+	mov eax, %1		; Set the eax value
 	cpuid
-	;shr ecx, 28
-	and ecx, 1
-	mov rax, rcx
-		
+
+
+	shr e%3, %4		; Shift the results reg by the bit we want
+	and e%3, 1		; And the shifted bit to extract it.
+	mov rax, r%3	; Move the extracted bit to the return value
+	
+	pop rbx			;Restore caller rbx
+	
 	ret
 
+%endmacro
+
+
+
+
+HasSSE3:
+	DOCPUID 1, 0, cx, 0
+
+;HasSSE3:
+	
+;	mov eax, 1
+;	cpuid
+	
+;	and ecx, 1
+;	mov rax, rcx
+	
+;	ret
 
 HasPCLMULQDQ:
-	mov eax, 1
+	DOCPUID 1, 0, cx, 1
+
+;HasPCLMULQDQ:
+;	mov eax, 1
 	
-	cpuid
-	shr ecx, 1
-	and ecx, 1
-	mov rax, rcx
+;	cpuid
+;	shr ecx, 1
+;	and ecx, 1
+;	mov rax, rcx
 		
-	ret
+;	ret
 
 HasSSSE3:
-	
-	mov eax, 1
-	
-	cpuid
-	shr ecx, 9
-	and ecx, 1
-	mov rax, rcx
-		
-	ret
+	DOCPUID 1, 0, cx, 9
 
+;HasSSSE3:
+	
+;	mov eax, 1
+	
+;	cpuid
+;	shr ecx, 9
+;	and ecx, 1
+;	mov rax, rcx
+		
+;	ret
 
 HasFMA:
-	
-	mov eax, 1
-	
-	cpuid
-	shr ecx, 12
-	and ecx, 1
-	mov rax, rcx
-		
-	ret
+	DOCPUID 1, 0, cx, 12
 
+
+;HasFMA:
+	
+;	mov eax, 1
+	
+;	cpuid
+;	shr ecx, 12
+;	and ecx, 1
+;	mov rax, rcx
+		
+;	ret
 
 HasSSE41:
+	DOCPUID 1, 0, cx, 19
+
+;HasSSE41:
 	
-	mov eax, 1
+;	mov eax, 1
 	
-	cpuid
-	shr ecx, 19
-	and ecx, 1
-	mov rax, rcx
+;	cpuid
+;	shr ecx, 19
+;	and ecx, 1
+;	mov rax, rcx
 		
-	ret
+;	ret
 
 
 HasSSE42:
+	DOCPUID 1, 0, cx, 20
+
+;	mov eax, 1
 	
-	mov eax, 1
-	
-	cpuid
-	shr ecx, 20
-	and ecx, 1
-	mov rax, rcx
+;	cpuid
+;	shr ecx, 20
+;	and ecx, 1
+;	mov rax, rcx
 		
-	ret
+;	ret
 
 
 HasAES:
-	mov eax, 1
+	DOCPUID 1, 0, cx, 25
+;	mov eax, 1
 	
-	cpuid
-	shr ecx, 25
-	and ecx, 1
-	mov rax, rcx
+;	cpuid
+;	shr ecx, 25
+;	and ecx, 1
+;	mov rax, rcx
 		
-	ret
+;	ret
 
 HasAVX:
+	DOCPUID 1, 0, cx, 28	
+;	mov eax, 1
 	
-	mov eax, 1
-	
-	cpuid
-	shr ecx, 28
-	and ecx, 1
-	mov rax, rcx
+;	cpuid
+;	shr ecx, 28
+;	and ecx, 1
+;	mov rax, rcx
 		
-	ret
+;	ret
 
 
 HasRDRAND:
+	DOCPUID 1, 0, cx, 30
+;	mov eax, 1
 	
-	mov eax, 1
-	
-	cpuid
-	shr ecx, 30
-	and ecx, 1
-	mov rax, rcx
+;	cpuid
+;	shr ecx, 30
+;	and ecx, 1
+;	mov rax, rcx
 		
-	ret
+;	ret
 
 
 HasRDSEED:
-	push rbx
+	DOCPUID 7, 0, bx, 18
+;	push rbx
 
-	mov eax, 7
-	xor rcx, rcx
+;	mov eax, 7
+;	xor rcx, rcx
 	
-	cpuid
-	shr ebx, 18
-	and ebx, 1
-	mov rax, rbx
+;	cpuid
+;	shr ebx, 18
+;	and ebx, 1
+;	mov rax, rbx
 		
-	pop rbx
-	ret
+;	pop rbx
+;	ret
 
 
 HasSHANI:
-	push rbx
+	DOCPUID 7, 0, bx, 29
+;	push rbx
 
-	mov eax, 7
-	xor rcx, rcx
+;	mov eax, 7
+;	xor rcx, rcx
 	
-	cpuid
-	shr ebx, 29
-	and ebx, 1
-	mov rax, rbx
+;	cpuid
+;	shr ebx, 29
+;	and ebx, 1
+;	mov rax, rbx
 		
-	pop rbx
-	ret
+;	pop rbx
+;	ret
 
 HasIBRS:
-
-	mov eax, 7
-	xor rcx, rcx
+	DOCPUID 7, 0, dx, 26
+;	mov eax, 7
+;	xor rcx, rcx
 	
-	cpuid
-	shr edx, 26
-	and edx, 1
-	mov rax, rdx
+;	cpuid
+;	shr edx, 26
+;	and edx, 1
+;	mov rax, rdx
 		
-	ret
+;	ret
 
 HasSTIBP:
-
-	mov eax, 7
-	xor rcx, rcx
+	DOCPUID 7, 0, dx, 27
+;	mov eax, 7
+;	xor rcx, rcx
 	
-	cpuid
-	shr edx, 27
-	and edx, 1
-	mov rax, rdx
+;	cpuid
+;	shr edx, 27
+;	and edx, 1
+;	mov rax, rdx
 		
-	ret
+;	ret
 
 
 HasCETSS:
-	mov eax, 7
-	xor rcx, rcx
+	DOCPUID 7, 0, cx, 7
+;	mov eax, 7
+;	xor rcx, rcx
 	
-	cpuid
-	shr ecx, 7
-	and ecx, 1
-	mov rax, rcx
+;	cpuid
+;	shr ecx, 7
+;	and ecx, 1
+;	mov rax, rcx
 		
-	ret
+;	ret
 
 HasCETIBT:
-	mov eax, 7
-	xor rcx, rcx
+	DOCPUID 7, 0, dx, 20	
+;	mov eax, 7
+;	xor rcx, rcx
 	
-	cpuid
-	shr edx, 20
-	and edx, 1
-	mov rax, rdx
+;	cpuid
+;	shr edx, 20
+;	and edx, 1
+;	mov rax, rdx
 		
-	ret
+;	ret
 
 
 
 HasAVX2:
-	push rbx
+	DOCPUID 7, 0, bx, 5
+;	push rbx
 
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ebx, 5
-	and ebx, 1
-	mov rax, rbx
+;	mov eax, 7
+;	xor ecx, ecx
+;	cpuid
+;	shr ebx, 5
+;	and ebx, 1
+;	mov rax, rbx
 
-	pop rbx
-	ret
+;	pop rbx
+;	ret
 
 ; EBX
 
 HasAVX512F:
-	push rbx
+	DOCPUID 7, 0, bx, 16
+;	push rbx
 
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ebx, 16
-	and ebx, 1
-	mov rax, rbx
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ebx, 16
+;	and ebx, 1
+;	mov rax, rbx
 
-	pop rbx
-	ret
+;	pop rbx
+;	ret
 
 
 
 
 HasAVX512DQ:
-	push rbx
+	DOCPUID 7, 0, bx, 17
+;	push rbx
 
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ebx, 17
-	and ebx, 1
-	mov rax, rbx
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ebx, 17
+;	and ebx, 1
+;	mov rax, rbx
 	
-	pop rbx
-	ret
+;	pop rbx
+;	ret
 
 
 
 HasAVX512FMA:
-	push rbx
+	DOCPUID 7, 0, bx, 21
+;	push rbx
 
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ebx, 21
-	and ebx, 1
-	mov rax, rbx
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ebx, 21
+;	and ebx, 1
+;	mov rax, rbx
 
-	pop rbx
-	ret
+;	pop rbx
+;	ret
 
 
 HasAVX512PF:
-	push rbx
+	DOCPUID 7, 0, bx, 26
+;	push rbx
 
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ebx, 26
-	and ebx, 1
-	mov rax, rbx
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ebx, 26
+;	and ebx, 1
+;	mov rax, rbx
 	
-	pop rbx
-	ret
+;	pop rbx
+;	ret
 
 
 HasAVX512ER:
-	push rbx
+	DOCPUID 7, 0, bx, 27
+;	push rbx
 
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ebx, 27
-	and ebx, 1
-	mov rax, rbx
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ebx, 27
+;	and ebx, 1
+;	mov rax, rbx
 
-	pop rbx
-	ret
+;	pop rbx
+;	ret
 
 
 HasAVX512CD:
-	push rbx
+	DOCPUID 7, 0, bx, 28
+;	push rbx
 
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ebx, 28
-	and ebx, 1
-	mov rax, rbx
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ebx, 28
+;	and ebx, 1
+;	mov rax, rbx
 	
 	
-	pop rbx
-	ret
+;	pop rbx
+;	ret
 
 
 
 HasAVX512BW:
-	push rbx
+	DOCPUID 7, 0, bx, 30
+;	push rbx
 
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ebx, 30
-	and ebx, 1
-	mov rax, rbx
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ebx, 30
+;	and ebx, 1
+;	mov rax, rbx
 	
-	pop rbx
-	ret
+;	pop rbx
+;	ret
 
 
 HasAVX512VL:
-	push rbx
+	DOCPUID 7, 0, bx, 31
+;	push rbx
 
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ebx, 31
-	and ebx, 1
-	mov rax, rbx
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ebx, 31
+;	and ebx, 1
+;	mov rax, rbx
 
-	pop rbx
-	ret
+;	pop rbx
+;	ret
 
 ; ECX
 HasAVX512VBMI:
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ecx, 1
-	and ecx, 1
-	mov rax, rcx
-	ret
+	DOCPUID 7, 0, cx, 1
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ecx, 1
+;	and ecx, 1
+;	mov rax, rcx
+;	ret
 
 HasAVX512VBMI2:
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ecx, 6
-	and ecx, 1
-	mov rax, rcx
-	ret
+	DOCPUID 7, 0, cx, 6
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ecx, 6
+;	and ecx, 1
+;	mov rax, rcx
+;	ret
 
 HasAVX512VNNI:
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ecx, 11
-	and ecx, 1
-	mov rax, rcx
-	ret
+	DOCPUID 7, 0, cx, 11
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ecx, 11
+;	and ecx, 1
+;	mov rax, rcx
+;	ret
 
 HasAVX512BITALG:
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ecx, 12
-	and ecx, 1
-	mov rax, rcx
-	ret
+	DOCPUID 7, 0, cx, 12
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ecx, 12
+;	and ecx, 1
+;	mov rax, rcx
+;	ret
 
 HasAVX512POPCNT:
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr ecx, 14
-	and ecx, 1
-	mov rax, rcx
-	ret
+	DOCPUID 7, 0, cx, 14
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr ecx, 14
+;	and ecx, 1
+;	mov rax, rcx
+;	ret
 
 
 ; EDX
 HasAVX512VNNIW:
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr edx, 2
-	and edx, 1
-	mov rax, rdx
-	ret
+	DOCPUID 7, 0, dx, 2
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr edx, 2
+;	and edx, 1
+;	mov rax, rdx
+;	ret
 
 HasAVX512FMAPS:
-	mov eax, 7
-	mov ecx, 0
-	cpuid
-	shr edx, 3
-	and edx, 1
-	mov rax, rdx
-	ret
+	DOCPUID 7, 0, dx, 3
+;	mov eax, 7
+;	mov ecx, 0
+;	cpuid
+;	shr edx, 3
+;	and edx, 1
+;	mov rax, rdx
+;	ret
 
 
 
@@ -458,14 +522,14 @@ LogicalProcCount:
 
 
 HasHTT:
-
-	mov eax, 01h
-	cpuid
-	shr edx, 28
+	DOCPUID 1, 0, dx, 28
+;	mov eax, 01h
+;	cpuid
+;	shr edx, 28
 	
-	and edx, 1
-	mov rax, rdx
+;	and edx, 1
+;	mov rax, rdx
 
 
-	ret
+;	ret
 		
